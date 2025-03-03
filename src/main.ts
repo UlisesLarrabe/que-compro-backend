@@ -13,9 +13,14 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('API')
     .build();
+  const theConfigService = app.get<ConfigService>(ConfigService);
+  const url: string = theConfigService.get('PROD_URL') ?? '';
+  app.enableCors({
+    origin: url,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
-  const theConfigService = app.get<ConfigService>(ConfigService);
   const port: number = theConfigService.get('PORT') ?? 3000;
   await app.listen(port ?? 8080);
 }
