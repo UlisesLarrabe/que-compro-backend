@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('NestJS API')
     .setDescription('API description')
@@ -20,7 +21,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('docs', app, documentFactory);
   const port: number = theConfigService.get('PORT') ?? 3000;
   await app.listen(port ?? 8080);
 }
